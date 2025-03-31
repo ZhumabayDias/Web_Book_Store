@@ -1,0 +1,4 @@
+<div *ngFor="let book of books" class="general-card-posts">
+    <h1 class="card-posts" >{{book.id}} - {{book.title}}</h1>
+    <button class="button-return" (click)="remeveBook(book)">Remove from Cart</button>
+</div>

@@ -1,0 +1,14 @@
+<div *ngIf = "loaded; else loadingBlock" class="main">
+    <h3 class="id">Book ID is {{book.id}}</h3>
+    <h4 class="title">Book title is {{book.title}}</h4>
+    <button class="button-return" [routerLink]="['/books']">Return</button>
+    
+    <!-- <img [src]="book.selectedImage" [alt]="book.name" class="book-photo"> -->
+    <button (click)="previousImage()">Previous</button>
+    <button (click)="nextImage()">Next</button>
+</div>
+
+<ng-template #loadingBlock>
+    Book details is loading...
+</ng-template>
+

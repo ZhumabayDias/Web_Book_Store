@@ -1,0 +1,14 @@
+<input type="text" [(ngModel)]="searchTerm" (input)="filterBooks()" placeholder="Поиск книг...">
+<div *ngIf="loaded; else loadingBlock">
+    <div *ngFor="let book of filteredBooks" class="general-card-posts">
+        <a class="card-posts" [routerLink]="['/books',book.id]">{{book.id}} - {{book.title}}</a>
+        <input type="number" [(ngModel)]="quantity" min="1" placeholder="Введите количество">
+        <button class="button-return" (click)="addToCart(book)">Add to cart</button>
+    </div>
+</div>
+
+<ng-template #loadingBlock>
+    Book details is loading...
+</ng-template>
+
+

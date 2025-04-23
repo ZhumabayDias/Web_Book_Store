@@ -14,13 +14,14 @@ class Book(models.Model):
     description = models.TextField()
     price = models.DecimalField(decimal_places=2,max_digits=8)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='books')
+    cover = models.ImageField(upload_to='book_covers/', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name='orders')
     status = models.CharField(max_length=20, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -53,7 +54,7 @@ class Review(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete = models.CASCADE,)
     book = models.ForeignKey(Book, on_delete = models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
@@ -62,3 +63,15 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title} ({self.quantity})"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='favorited_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'book']
+
+    def __str__(self):
+        return f"{self.user.username} ♥ {self.book.title}"

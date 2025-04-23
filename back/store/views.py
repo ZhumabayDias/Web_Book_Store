@@ -1,5 +1,5 @@
-from .models import Book,Order,Category,Review,Cart,OrderItem
-from .serializers import BookSerializer,OrderSerializer,LoginSerializer,RegisterSerializer,ReviewSerializer,CategoryCatalogSerializer,CartSerializer,ProfileSerializer,CategorySerializer
+from .models import Book, Favorite,Order,Category,Review,Cart,OrderItem
+from .serializers import BookSerializer, FavoriteSerializer,OrderSerializer,LoginSerializer,RegisterSerializer,ReviewSerializer,CategoryCatalogSerializer,CartSerializer,ProfileSerializer,CategorySerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
@@ -7,25 +7,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
+from rest_framework.generics import ListCreateAPIView
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
-
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def book_list_create(request):
-    if request.method == 'GET':
-        books = Book.objects.all()
-        serializer = BookSerializer(books,many = True)
-        return Response(serializer.data)
-    
-    elif request.method == 'POST':
-        if not request.user.is_staff:
-            return Response({"Only admins can add books "}, status=403)
-        serializer = BookSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status = 201)
-        return Response(serializer.errors, status = 400)
-    
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -67,13 +52,6 @@ def create_order(request):
     return Response(serializer.data, status=201)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def my_orders(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data)
-
 
 class BookDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -86,7 +64,7 @@ class BookDetailView(APIView):
     def put(self, request, pk):
         book = get_object_or_404(Book,id = pk)
         serializer = BookSerializer(book, data = request.data)
-        if serializer.is_valid:
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
@@ -123,13 +101,9 @@ def register(request):
 @permission_classes([IsAuthenticated])
 def add_review(request,book_id):
     book = get_object_or_404(Book, id=book_id)
-    data = request.data.copy()
-    data['user'] = request.user.id
-    data['book'] = book.id
-
-    serializer = ReviewSerializer(data=data)
+    serializer = ReviewSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(user=request.user, book=book)
         return Response(serializer.data,status=201)
     return Response(serializer.errors, status=400)
 
@@ -151,11 +125,9 @@ def cart_items(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = request.data.copy()
-        data['user'] = request.user.id
-        serializer = CartSerializer(data=data)
+        serializer = CartSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
@@ -191,3 +163,38 @@ def catalog_view(request):
     categories = Category.objects.prefetch_related('books').all()
     serializer = CategoryCatalogSerializer(categories, many=True)
     return Response(serializer.data)
+
+class BookListView(ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'author__name']
+    ordering_fields = ['price']
+    filterset_fields = ['category',]
+
+
+
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def favorite_books(request):
+    if request.method == 'GET':
+        favorites = Favorite.objects.filter(user=request.user)
+        serializer = FavoriteSerializer(favorites, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = FavoriteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        book_id = request.data.get('book')
+        fav = Favorite.objects.filter(user=request.user, book_id=book_id).first()
+        if fav:
+            fav.delete()
+            return Response({'message': 'Book removed from favorites'})
+        return Response({'error': 'Not in favorites'}, status=404)
+    

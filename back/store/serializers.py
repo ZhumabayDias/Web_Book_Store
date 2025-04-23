@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book,Order,Category,Review,Cart,OrderItem
+from .models import Book, Favorite,Order,Category,Review,Cart,OrderItem
 from django.contrib.auth.models import User
 
 class BookSerializer(serializers.ModelSerializer):
@@ -70,7 +70,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        read_only_fields = ['user']
+        read_only_fields = ['user','book']
 
 
 
@@ -88,3 +88,9 @@ class ProfileSerializer(serializers.ModelSerializer):
        
         
 
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+        read_only_fields = ['user', 'added_at']

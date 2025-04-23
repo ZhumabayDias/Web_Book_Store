@@ -7,15 +7,15 @@ import { Book } from './models';
   providedIn: 'root'
 })
 export class BooksService {
-  private apiUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
+  private apiUrl = '';
   
   constructor(private client: HttpClient) { }
 
   getBook(id: number): Observable<Book>{
-    return this.client.get<Book>(`https://jsonplaceholder.typicode.com/albums/${id}`)
+    return this.client.get<Book>(`http://127.0.0.1:8000/api/books/${id}`)
   }
 
   getBooks(): Observable<Book[]>{
-    return this.client.get<Book[]>('https://jsonplaceholder.typicode.com/albums')
+    return this.client.get<Book[]>('http://127.0.0.1:8000/api/books/')
   }
 }

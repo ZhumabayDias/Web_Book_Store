@@ -1,17 +1,19 @@
 from django.urls import path
 from .views import (
-    register, book_list_create, create_order, BookDetailView,
+    favorite_books, register, create_order, BookDetailView,
     add_review, book_reviews, category_list_create, cart_items,
-    user_profile, catalog_view, MyOrdersView
+    user_profile, catalog_view, MyOrdersView,BookListView
 )
 
 urlpatterns = [
     path('profile/', user_profile),
     path('register/', register),
-    path('books/', book_list_create),
+    path('books/', BookListView.as_view()),
     path('books/<int:pk>/', BookDetailView.as_view()),
     path('books/<int:book_id>/review/', add_review),
     path('books/<int:book_id>/reviews/', book_reviews),
+
+    path('favorites/', favorite_books),
     
     path('categories/', category_list_create),
     path('cart/', cart_items),

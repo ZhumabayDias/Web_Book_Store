@@ -1,14 +1,22 @@
-<div *ngIf = "loaded; else loadingBlock" class="main">
-    <h3 class="id">Book ID is {{book.id}}</h3>
-    <h4 class="title">Book title is {{book.title}}</h4>
-    <button class="button-return" [routerLink]="['/books']">Return</button>
-    
-    <!-- <img [src]="book.selectedImage" [alt]="book.name" class="book-photo"> -->
-    <button (click)="previousImage()">Previous</button>
-    <button (click)="nextImage()">Next</button>
+<div *ngIf="!loaded" class="loading">Loading book details...</div>
+
+<div *ngIf="loaded" class="details-container">
+  <button (click)="toReturn()" class="back-btn">← Back</button>
+
+  <div class="book-details">
+    <div class="image-section">
+      <button (click)="previousImage()" class="nav-btn">‹</button>
+      <img [src]="book.selectedImage || book.images[0]" alt="{{ book.title }}" />
+      <button (click)="nextImage()" class="nav-btn">›</button>
+    </div>
+
+    <div class="info-section">
+      <h2 class="title">{{ book.title }}</h2>
+      <p class="author"><strong>Author:</strong> {{ book.author }}</p>
+      <p class="description">{{ book.description }}</p>
+      <p class="price">Price: {{ book.price }}₸</p>
+      
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+  </div>
 </div>
-
-<ng-template #loadingBlock>
-    Book details is loading...
-</ng-template>
-

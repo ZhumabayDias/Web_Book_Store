@@ -1,4 +1,8 @@
 export interface Book{
+  category: any;
+  rating: number;
+author: any;
+price: any;
     id: string;
     title: string;
     authors: string[];

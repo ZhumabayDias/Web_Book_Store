@@ -1,18 +1,35 @@
 <div class="login-container">
-  <h2>Login</h2>
-  
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
-  
-  <form (ngSubmit)="login()">
-    <label for="username">Email</label>
-    <input type="email" id="username" [(ngModel)]="username" name="username" required />
+  <h2>Login to Your Account</h2>
 
-    <label for="password">Password</label>
-    <input type="password" id="password" [(ngModel)]="password" name="password" required />
+  <form (ngSubmit)="login()" #loginForm="ngForm" class="login-form">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="username"
+        required
+        placeholder="Enter your username"
+      />
+    </div>
 
-    <button type="submit">Login</button>
-    <button (click)="logout()">Logout</button>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        placeholder="Enter your password"
+      />
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" [disabled]="!loginForm.form.valid">Login</button>
   </form>
 </div>

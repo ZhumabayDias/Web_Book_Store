@@ -26,7 +26,7 @@ export class LoginComponent {
       },
       (error) => {
         console.error('Login failed', error);
-        this.errorMessage = 'Ошибка при авторизации. Проверьте данные.';
+        this.errorMessage = 'Error during authorization. Check the data.';
       }
     );
   }
@@ -34,6 +34,6 @@ export class LoginComponent {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
-    alert("Вы вышли")
+    alert("You logged out")
   }
 }

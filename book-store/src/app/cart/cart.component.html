@@ -1,4 +1,41 @@
-<div *ngFor="let book of books" class="general-card-posts">
-    <h1 class="card-posts" >{{book.id}} - {{book.title}}</h1>
-    <button class="button-return" (click)="remeveBook(book)">Remove from Cart</button>
-</div>
+<div class="cart-container" *ngIf="loaded">
+    <h2>Your Cart</h2>
+  
+    <div *ngIf="books.length === 0" class="empty-cart">
+      <p>Your cart is empty 🛒</p>
+      <a routerLink="/books">Browse books</a>
+    </div>
+  
+    <div *ngFor="let book of books" class="cart-item">
+      <img [src]="book.images" alt="{{ book.title }}" />
+      
+      <div class="details">
+        <div class="header">
+          <div class="name">{{ book.title }}</div>
+          <div class="favorite"><i class="fas fa-heart favorite not"></i></div>
+        </div>
+  
+        <div class="author">
+          <span *ngFor="let author of book.authors">{{ author }}</span>
+        </div>
+  
+        <div class="description">
+          {{ book.description }}
+        </div>
+  
+        <div class="time">
+          <span>Published: {{ book.publishedDate }}</span>
+        </div>
+  
+        <div class="price">
+          {{ book.price | currency }}
+        </div>
+  
+        <button (click)="remeveBook(book)">Remove</button>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="!loaded" class="loading">
+    Loading your cart...
+  </div>  

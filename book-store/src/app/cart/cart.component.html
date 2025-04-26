@@ -1,4 +1,35 @@
-<div *ngFor="let book of books" class="general-card-posts">
-    <h1 class="card-posts" >{{book.id}} - {{book.title}}</h1>
-    <button class="button-return" (click)="remeveBook(book)">Remove from Cart</button>
+
+<h2 class="cart-header">Себетте, <b>{{ getTotalPrice() }} ₸</b> тұратын {{ books.length }} тауар</h2>
+
+<hr />
+
+<div class="cart-grid">
+  <div class="cart-item" *ngFor="let item of books">
+    <img [src]="item.book.cover" alt="{{ item.book.title }}" class="cart-cover" />
+
+    <div class="cart-info">
+      <h3 class="book-title">{{ item.book.title }}</h3>
+      <p class="book-author">{{ item.book.author }}</p>
+      <span class="type-badge">📕 Қағаз түрінде</span>
+
+      <p class="meta">Беттер саны: {{ item.book.pages }}</p>
+      <p class="meta">ISBN: {{ item.book.isbn }}</p>
+      <p class="meta">Шығарылған жылы: {{ item.book.year }}</p>
+    </div>
+
+    <div class="cart-right">
+      <div class="qty-controls">
+        <button class="qty-btn">-</button>
+        <span class="qty">{{ item.quantity }}</span>
+        <button class="qty-btn">+</button>
+      </div>
+
+      <div class="price">{{ item.book.price * item.quantity }}₸</div>
+      <button class="buy-btn">Сатып алу</button>
+    </div>
+  </div>
+</div>
+
+<div class="checkout-box">
+  <button class="checkout-btn" (click)="createOrder()">РЕСІМДЕУ</button>
 </div>

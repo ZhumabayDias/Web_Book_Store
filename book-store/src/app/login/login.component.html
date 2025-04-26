@@ -1,18 +1,42 @@
-<div class="login-container">
-  <h2>Login</h2>
-  
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
+<div class="login-wrapper">
+  <div class="login-box">
+    <div class="logo-text">
+      <span class="book">Book</span><span class="tar">tar</span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab" >Тіркеу</button>
+      <button class="tab" >Кіру</button>
+    </div>
+
+    <!-- Вход -->
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
+      <input type="password" placeholder="Құпия сөз" [(ngModel)]="password" name="password" required>
+      <button type="submit" class="login-button">Кіру</button>
+      <a class="forgot-password" href="#">Құпия сөзді ұмыттыңыз ба?</a>
+
+      <div class="social-login">
+        <p>Әлеуметтік желілер арқылы кіру</p>
+        <div class="icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="icon" alt="Google">
+          <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png" class="icon" alt="Facebook">
+        </div>
+      </div>
+    </form>
+
+    <!-- Регистрация -->
+    <!-- <form *ngIf="!flag" (ngSubmit)="onRegister()" class="login-form">
+      <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
+      <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
+      <input type="password" placeholder="Құпия сөз" [(ngModel)]="password" name="password" required>
+      <button type="submit" class="login-button">Тіркелу</button>
+    </form>
+
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p> -->
+
+
+
+    
   </div>
-  
-  <form (ngSubmit)="login()">
-    <label for="username">Email</label>
-    <input type="email" id="username" [(ngModel)]="username" name="username" required />
-
-    <label for="password">Password</label>
-    <input type="password" id="password" [(ngModel)]="password" name="password" required />
-
-    <button type="submit">Login</button>
-    <button (click)="logout()">Logout</button>
-  </form>
 </div>

@@ -1,0 +1,127 @@
+.header {
+    position: relative;
+    left: 100px;
+    width: 1000px;
+    background-color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .header-li-a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  
+  .header-li-a:hover {
+    background-color: #e0d4f7;
+    color: #5e2ca5;
+  }
+
+.icon{
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  .logo-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #5e2ca5;
+  }
+  
+  .logo-text .book {
+    color: #222; 
+  }
+  
+  .logo-text .tar {
+    color: #5e2ca5; 
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-btn {
+    background-color: #8e2cb3;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    list-style: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 12px 0;
+    margin-top: 8px;
+    display: none;
+    min-width: 240px;
+    z-index: 999;
+  }
+  
+  .dropdown-menu li {
+    padding: 8px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+   
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 500px;
+  }
+  
+  .search-container input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1;
+  }
+  
+  .search-container button {
+    padding: 8px 16px;
+    background-color: #8e2cb3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+
+

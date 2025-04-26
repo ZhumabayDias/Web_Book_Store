@@ -1,37 +1,123 @@
-.albums{
-    display: grid;
-    grid-template-columns: repeat(10,90px);
-    gap:10px;
+
+  .cart-header {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  hr {
+    margin-bottom: 20px;
+  }
+  
+  .cart-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .cart-item {
+    display: flex;
     padding: 20px;
-}
-
-.general-card-posts{
-    background-color: bisque;
-    border: 1px solid bisque;
-    border-radius: 10px;
-    padding: 10px;
- 
+    border-bottom: 1px solid #ddd;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .cart-cover {
+    width: 120px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .cart-info {
+    flex-grow: 1;
+  }
+  
+  .book-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .book-author {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .type-badge {
+    display: inline-block;
+    background: #ffecec;
+    color: #c0392b;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 10px 0;
+  }
+  
+  .meta {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 2px;
+  }
+  
+  .cart-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  
+  .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .qty-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .qty {
+    font-size: 16px;
+    min-width: 24px;
     text-align: center;
-    justify-content: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-posts{
-    height: 180px;
-    text-decoration: none;
-    color: rgb(102, 128, 148);
-    display: block;
-}
-
-.deleteButton{
-    background-color: rgb(173, 147, 147);
-    padding: 10px;
-    border-style: none;
+  }
+  
+  .price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #7e1c6e;
+  }
+  
+  .buy-btn {
+    background: #f3e3f0;
+    color: #7e1c6e;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .checkout-box {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .checkout-btn {
+    padding: 10px 25px;
+    background: white;
+    color: #7e1c6e;
+    border: 2px solid #7e1c6e;
+    border-radius: 8px;
+    font-weight: bold;
     font-size: 15px;
-    border-radius: 10px;
-    color: rgb(33, 118, 151);
-}
-
-button:hover{
-    background-color: rgb(32, 64, 101)
+    cursor: pointer;
   }

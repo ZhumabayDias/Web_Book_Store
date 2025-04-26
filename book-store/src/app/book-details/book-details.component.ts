@@ -1,56 +1,109 @@
-import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CommonModule, Location } from '@angular/common';
-import { Book } from '../models';
-import { BooksService } from '../books.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FooterComponent } from '../footer/footer.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-book-details',
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, FooterComponent, FormsModule,RouterModule,RouterLink,RouterOutlet],
   templateUrl: './book-details.component.html',
-  styleUrl: './book-details.component.css'
+  styleUrls: ['./book-details.component.css']
 })
-export class BookDatailComponent {
-  book !: Book;
-  books !: Book[];
-  loaded: boolean;
-  @ViewChild('myInput') myInputRef!: ElementRef;
+export class BookDetailComponent implements OnInit {
+  book: any;
+  reviews: any[] = [];
+  newReview = { comment: '', rating: null };
+  isAuthenticated = false;
+  isFavorite = false;
 
-  constructor(private route:ActivatedRoute,
-    private bookService:BooksService,
-    private location: Location
-  ){
-    this.loaded = false;
-  }
+  constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const bookID = Number(params.get('id'));
-      this.loaded = false;
-      this.bookService.getBook(bookID).subscribe((book: Book) => {
-        this.book = book;
-        this.loaded = true;
-       });
-
-    });
-
+    const bookId = this.route.snapshot.params['id'];
+    this.fetchBook(bookId);
+    this.fetchReviews(bookId);
+    this.isAuthenticated = !!localStorage.getItem('access');
+    this.checkIfFavorite(bookId);
   }
 
-  toReturn(){
-    this.location.back();
+  fetchBook(id: number) {
+    this.http.get(`http://127.0.0.1:8000/api/books/${id}/`).subscribe(data => this.book = data);
   }
 
-  previousImage() {
-    const index = this.book.images.indexOf(this.book.selectedImage ?? '');
-    this.book.selectedImage = this.book.images[(index - 1 + this.book.images.length) % this.book.images.length];
+  fetchReviews(id: number) {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/books/${id}/reviews/`)
+      .subscribe(data => this.reviews = data);
+  }
+
+  submitReview() {
+    const bookId = this.route.snapshot.params['id'];
+  
+    this.http.post(`http://127.0.0.1:8000/api/books/${bookId}/review/`, this.newReview)
+      .subscribe(() => {
+        this.fetchReviews(bookId);
+        this.newReview = { comment: '', rating: null };
+      });
+  }
+
+  toggleFavorite() {
+    const bookId = this.book.id;
+  
+    if (this.isFavorite) {
+      this.http.request('delete', 'http://127.0.0.1:8000/api/favorites/', {
+        body: { book: bookId }
+      }).subscribe({
+        next: () => this.isFavorite = false,
+        error: (err) => {
+          console.error('Ошибка удаления из favorites:', err);
+          alert('Қате болды фавориттен жою кезінде ❌');
+        }
+      });
+    } else {
+      this.http.post('http://127.0.0.1:8000/api/favorites/', {
+        book: bookId
+      }).subscribe({
+        next: () => this.isFavorite = true,
+        error: (err) => {
+          console.error('Ошибка добавления в favorites:', err);
+          if (err.status === 400) {
+            alert('Бұл кітап уже фаворитте!');
+          } else {
+            alert('Қате болды фаворитке қосқанда ❌');
+          }
+        }
+      });
+    }
   }
   
-  nextImage() {
-    const index = this.book.images.indexOf(this.book.selectedImage ?? '');
-    this.book.selectedImage = this.book.images[(index + 1) % this.book.images.length];
+  checkIfFavorite(bookId: number) {
+    this.http.get<any[]>('http://127.0.0.1:8000/api/favorites/')
+      .subscribe(data => {
+        this.isFavorite = data.some(fav => fav.book.id === bookId || fav.book === bookId);
+      });
   }
 
-
+  addToCart() {
+    const token = localStorage.getItem('access');
+    if (!token) {
+      alert('Алдымен жүйеге кіріңіз!');
+      return;
+    }
+  
+    this.http.post('http://127.0.0.1:8000/api/cart/', {
+      book: this.book.id,
+      quantity: 1
+    }).subscribe({
+      next: () => alert('Кітап себетке қосылды! ✅'),
+      error: err => {
+        console.error(err);
+        if (err.status === 401) {
+          alert('Сессия аяқталды. Қайта кіріңіз.');
+        } else {
+          alert('Қате болды кітапты себетке қосқанда ❌');
+        }
+      }
+    });
+  }
 }
-
-

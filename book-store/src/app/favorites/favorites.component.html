@@ -1,0 +1,18 @@
+<div class="all">
+  <h2>📚 Жаңа кітаптар</h2>
+
+  
+<div class="books-grid">
+  <a [routerLink]="['/books', fav.book.id]" class="book-card-link" *ngFor="let fav of favorites">
+    <div class="book-card">
+      <img *ngIf="fav.book.cover" [src]="fav.book.cover" alt="{{ fav.book.title }}" />
+      <h4>{{ fav.book.title }}</h4>
+      <strong>{{ fav.book.price }} ₸</strong>
+    </div>
+  </a>
+</div>
+
+
+</div>
+<app-footer></app-footer>
+

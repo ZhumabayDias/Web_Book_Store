@@ -1,1 +1,18 @@
-<p>home works!</p>
+<div class="all">
+  <h2>📚 Жаңа кітаптар</h2>
+
+  
+<div class="books-grid">
+  <a [routerLink]="['/books', book.id]" class="book-card-link" *ngFor="let book of books">
+    <div class="book-card">
+      <img *ngIf="book.cover" [src]="book.cover" alt="{{ book.title }}" />
+      <h4>{{ book.title }}</h4>
+      <strong>{{ book.price }} ₸</strong>
+    </div>
+  </a>
+</div>
+
+
+</div>
+<app-footer></app-footer>
+

@@ -1,8 +1,36 @@
-<ul>
-  <li><a [routerLink]="['/home']">Home</a></li>
-  <li><a [routerLink]="['/books']">Books</a></li>
-  <li><a [routerLink]="['/login']">Login</a></li>
-  <li><a [routerLink]="['/cart']">Cart</a></li>
-</ul>
+<div class="header">
+  <ul class="header-ul">
+
+    <li class="header-li">
+      <a class="header-li-a" [routerLink]="['/home']">
+      <div class="logo-text">
+        <span class="book">Book</span><span class="tar">tar</span>
+      </div>
+    </a>
+    </li>
+
+    <li class="dropdown">
+      <button (click)="toggleDropdown()" class="dropdown-btn">
+        Каталог
+      </button>
+      <ul *ngIf="isDropdownOpen" class="dropdown-menu" [class.show]="isDropdownOpen">
+        <li *ngFor="let category of catalog" (click)="onCategorySelect(category)">
+          {{ category.name }}
+        </li>
+      </ul>
+    </li>
+
+
+    <li class="search-container">
+      <input [(ngModel)]="searchQuery" placeholder="Кітаптар, автор, жанр" />
+      <button (click)="searchBooks()">Іздеу</button>
+    </li>
+
+    <li class="header-li"><a class="header-li-a" [routerLink]="['/cart']"><img src="https://cdn0.iconfinder.com/data/icons/phosphor-light-vol-4/256/shopping-cart-light-512.png" alt="Cart" class="icon" /></a></li>
+   
+    <li class="header-li"><a class="header-li-a" [routerLink]="['/favorites']"><img src="https://cdn4.iconfinder.com/data/icons/basic-ui-2-line/32/heart-love-like-likes-loved-favorite-512.png" alt="Favorites" class="icon" /></a></li>
+    <li class="header-li"><a class="header-li-a" [routerLink]="['/login']"><img src="https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-512.png" alt="Profile" class="icon" /></a></li>
+  </ul>
+</div>
 
 <router-outlet></router-outlet>

@@ -7,6 +7,12 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+    def get_cover(self, obj):
+        request = self.context.get('request')
+        if obj.cover:
+            return request.build_absolute_uri(obj.cover.url)
+        return None
+    
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -27,9 +33,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class BookMiniSerializer(serializers.ModelSerializer):
+    cover = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
-        fields = ['id', 'title', 'price']
+        fields = ['id', 'title', 'cover', 'price']
+
+    def get_cover(self, obj):
+        request = self.context.get('request')
+        if obj.cover and request:
+            return request.build_absolute_uri(obj.cover.url)
+        return None
 
 
 
@@ -67,6 +81,8 @@ class RegisterSerializer(serializers.Serializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    
     class Meta:
         model = Review
         fields = '__all__'
@@ -75,9 +91,15 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    book = BookMiniSerializer(read_only=True)
+
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['id', 'book', 'quantity']
+        extra_kwargs = {
+            'book': {'required': True},
+        }
+
 
 
 
@@ -90,7 +112,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    book = BookMiniSerializer(read_only=True)
+
     class Meta:
         model = Favorite
-        fields = '__all__'
+        fields = ['id', 'book', 'added_at']
         read_only_fields = ['user', 'added_at']

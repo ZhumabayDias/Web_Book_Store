@@ -1,14 +1,119 @@
-<div *ngIf = "loaded; else loadingBlock" class="main">
-    <h3 class="id">Book ID is {{book.id}}</h3>
-    <h4 class="title">Book title is {{book.title}}</h4>
-    <button class="button-return" [routerLink]="['/books']">Return</button>
-    
-    <!-- <img [src]="book.selectedImage" [alt]="book.name" class="book-photo"> -->
-    <button (click)="previousImage()">Previous</button>
-    <button (click)="nextImage()">Next</button>
-</div>
+<div class="book-detail-flex" *ngIf="book">
+    <!-- Картинка -->
+    <div class="book-image">
+      <img [src]="book.cover" alt="{{ book.title }}" />
+    </div>
+  
+    <!-- Информация о книге -->
+    <div class="book-info">
+      <h2>{{ book.title }}</h2>
+      <p class="type">Кітап түрі: <span class="paper-tag">Қағаз кітап</span></p>
+      <p class="price">{{ book.price }} ₸</p>
+      <p class="note">*Сайт арқылы тапсырыс берген кезде 0 % жеңілдік алыңыз.</p>
+  
+      <button class="buy-btn">Қазір сатып алыңыз</button>
+      <button class="fav-btn" (click)="toggleFavorite()">
+        {{ isFavorite ? '❤️ Таңдалғандарда' : '🤍 Таңдалғандарға қосу' }}
+      </button>
+      <button (click)="addToCart()">🛒 Себетке қосу</button>
 
-<ng-template #loadingBlock>
-    Book details is loading...
-</ng-template>
+  
+      <div class="meta">
+        <h4>Сипаттамалары</h4>
+        <p><strong>Автор:</strong> {{ book.author || 'Белгісіз' }}</p>
+        <p><strong>Баспа:</strong> Samga</p>
+        <p><strong>Сериясы:</strong> {{ book.series || '-' }}</p>
+      </div>
+    </div>
+  
+    <!-- Блок рейтинга и доставки -->
+    <div class="book-rating-delivery">
+      <h4>Болуы және рейтингі:</h4>
+      <hr />
+      <p>✅ Қоймада бар</p>
+      <p>⭐ 0.00 (Пікірлер саны 0)</p>
+  
+      <h4>Жеткізу шарттары</h4>
+      <hr />
+      <p class="delivery-text">
+        Әдетте, кітаптарды жеткізу Алматы қаласы бойынша 1-ден 3 күнге дейін, Қазақстан бойынша 14 күнге дейін жүзеге асырылады.
+      </p>
+  
+      <h4>Жеткізу әдістері</h4>
+      <hr />
+      <ul class="delivery-methods">
+        <li>✔️ Дүкеннен алып кету</li>
+        <li>✔️ Алматы қаласы бойынша курьерлік жеткізу</li>
+        <li>✔️ Қазақстан бойынша курьерлік жеткізу</li>
+        <li>✔️ Қазпошта бөлімшесіне жеткізу</li>
+      </ul>
+    </div>
+  </div>
 
+  <!-- Аңдатпа -->
+<div class="book-description-section">
+    <h3>Аңдатпа</h3>
+    <p>{{ book.description || 'Бұл кітаптың аңдатпасы жақында қосылады.' }}</p>
+  
+    <div class="social-icons">
+      <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="vk" />
+      <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png" alt="facebook" />
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="telegram" />
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733635.png" alt="twitter" />
+    </div>
+  </div>
+  
+  <!-- Ақпарат -->
+  <div class="book-info-section">
+    <h3>Ақпарат</h3>
+    <table>
+      <tr>
+        <td>Беттер саны</td>
+        <td>{{ book.pages || '—' }}</td>
+      </tr>
+      <tr>
+        <td>ISBN:</td>
+        <td>{{ book.isbn || '—' }}</td>
+      </tr>
+      <tr>
+        <td>Шығарылған жылы:</td>
+        <td>{{ book.year || '—' }}</td>
+      </tr>
+      <tr>
+        <td>Жеткізу:</td>
+        <td>3-тен 14 күнге дейін</td>
+      </tr>
+      <tr>
+        <td>Мұқаба:</td>
+        <td>{{ book.coverType || 'Қатты' }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="review-section">
+    <h3>Пікірлер ({{ reviews.length }})</h3>
+    <hr />
+  
+    <!-- Если пользователь не залогинен -->
+    <div *ngIf="!isAuthenticated">
+      <p>Пікір қалдыру үшін жүйеге кіріңіз</p>
+    </div>
+  
+    <!-- Если залогинен -->
+    <form *ngIf="isAuthenticated" (ngSubmit)="submitReview()">
+      <textarea [(ngModel)]="newReview.comment" name="comment" placeholder="Пікір жазыңыз..." required></textarea>
+      <select [(ngModel)]="newReview.rating" name="rating" required>
+        <option value="" disabled selected>Баға беріңіз</option>
+        <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} ⭐</option>
+      </select>
+      <button type="submit">Жіберу</button>
+    </form>
+  
+    <!-- Отзывы -->
+    <div *ngFor="let review of reviews" class="single-review">
+      <strong>{{ review.username }}</strong> 
+      <span>({{ review.rating }} ⭐)</span>
+      <p>{{ review.comment }}</p>
+    </div>
+  </div>
+<app-footer></app-footer>

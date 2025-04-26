@@ -1,39 +1,41 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {AuthService} from '../services/auth.service';
+import {Router} from '@angular/router';
+import {FormsModule} from '@angular/forms';
+import {NgIf} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    FormsModule,
+    NgIf
+  ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
-  errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  username = '';
+  password = '';
+  errorMessage = '';
 
-  login(): void {
-    this.authService.login(this.username, this.password).subscribe(
-      (response) => {
-        console.log('Login successful', response);
+  constructor(private http: HttpClient, private router: Router) { }
+
+  onLogin() {
+    const body = {username: this.username, password: this.password};
+    this.http.post<any>('http://localhost:8000/api/token/', body).subscribe({
+      next: (res:any) => {
+        localStorage.setItem('access', res.access);
+        localStorage.setItem('refresh', res.refresh);
+        localStorage.setItem('username', res.username);
         this.router.navigate(['/home']);
       },
-      (error) => {
-        console.error('Login failed', error);
-        this.errorMessage = 'Ошибка при авторизации. Проверьте данные.';
-      }
-    );
+      error: (err) => {
+        console.error('Login failed', err);
+        alert('Login failed');
+      },
+    });
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-    alert("Вы вышли")
-  }
 }

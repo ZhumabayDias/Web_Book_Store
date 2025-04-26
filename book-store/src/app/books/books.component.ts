@@ -1,58 +1,34 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Book }  from '../models'
-import { BooksService } from '../books.service';
-import { CartService } from '../cart.service';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { BookService } from '../services/book.service'; 
+import { CommonModule } from '@angular/common';
+import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-books',
-  imports: [RouterModule,CommonModule,FormsModule],
   templateUrl: './books.component.html',
-  styleUrl: './books.component.css'
+  imports: [CommonModule,RouterLink,FormsModule],
+  styleUrls: ['./books.component.css']
 })
-export class BooksComponent implements OnInit{
-  books !: Book[];
-  filteredBooks!: Book[];
-  searchTerm: string = '';
-  quantity: number = 1;
-  loaded:boolean;
+export class BooksComponent implements OnInit {
+  books: any[] = [];
 
-  constructor(private booksService: BooksService,
-    private cartService: CartService
-  ){
-     this.loaded = false;
-  }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private bookService: BookService) {}
 
   ngOnInit(): void {
-    this.loaded = false;
-   this.booksService.getBooks().subscribe((books:Book[]) => {
-      this.books = books;
-      this.filteredBooks = books;
-      this.loaded = true;
-      
-   })
-  }
-
-  filterBooks(): void {
-    if (!this.searchTerm.trim()) { 
-      this.filteredBooks = [...this.books]; 
-    } else {
-      this.filteredBooks = this.books.filter(book => 
-        book.title.toLowerCase().startsWith(this.searchTerm.toLowerCase())
-      );
-    }
-  }
-  addToCart(book: any) {
-    if (this.quantity > 0) {
-      for (let i = 0; i < this.quantity; i++) {
-        this.cartService.addToCart(book);
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search) {
+        this.bookService.searchBooks(search).subscribe(data => {
+          this.books = data;
+        });
+      } else {
+        this.bookService.getBooks().subscribe(data => {
+          this.books = data;
+        });
       }
-      alert(`${this.quantity} x "${book.title}" добавлено в корзину!`);
-      this.quantity = 1;
-    } else {
-      alert('Введите корректное количество!');
-    }
+    });
   }
 }

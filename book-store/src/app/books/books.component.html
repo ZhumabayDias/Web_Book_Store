@@ -1,14 +1,12 @@
-<input type="text" [(ngModel)]="searchTerm" (input)="filterBooks()" placeholder="Поиск книг...">
-<div *ngIf="loaded; else loadingBlock">
-    <div *ngFor="let book of filteredBooks" class="general-card-posts">
-        <a class="card-posts" [routerLink]="['/books',book.id]">{{book.id}} - {{book.title}}</a>
-        <input type="number" [(ngModel)]="quantity" min="1" placeholder="Введите количество">
-        <button class="button-return" (click)="addToCart(book)">Add to cart</button>
+<div class="all">
+    <h2>🔍 Іздеу нәтижесі</h2>
+  
+    <div class="books-grid">
+      <div class="book-card" *ngFor="let book of books">
+        <img *ngIf="book.cover" [src]="book.cover" alt="{{ book.title }}" />
+        <h4>{{ book.title }}</h4>
+        <strong>{{ book.price }} ₸</strong>
+        <a [routerLink]="['/books', book.id]" class="details-link">Толығырақ</a>
+      </div>
     </div>
-</div>
-
-<ng-template #loadingBlock>
-    Book details is loading...
-</ng-template>
-
-
+  </div>

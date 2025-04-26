@@ -107,3 +107,33 @@
     height: 32px;
     cursor: pointer;
   }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  .tab {
+    background-color: transparent;
+    border: 2px solid ;
+    color: #5e2ca5;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+
+  .tab.active {
+    color: white;
+    
+  }
+  
+
+  .tab:hover {
+    color: #5e2ca5;
+    
+  }

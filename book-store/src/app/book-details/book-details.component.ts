@@ -52,7 +52,7 @@ export class BookDetailComponent implements OnInit {
   
     if (this.isFavorite) {
       this.http.request('delete', 'http://127.0.0.1:8000/api/favorites/', {
-        body: { book: bookId }
+        body: { book_id: bookId }
       }).subscribe({
         next: () => this.isFavorite = false,
         error: (err) => {
@@ -62,13 +62,17 @@ export class BookDetailComponent implements OnInit {
       });
     } else {
       this.http.post('http://127.0.0.1:8000/api/favorites/', {
-        book: bookId
+        book_id: bookId
       }).subscribe({
         next: () => this.isFavorite = true,
         error: (err) => {
           console.error('Ошибка добавления в favorites:', err);
           if (err.status === 400) {
-            alert('Бұл кітап уже фаворитте!');
+            if (err.error && err.error.error === 'Book is already in favorites') {
+              alert('Бұл кітап уже фаворитте!');
+            } else {
+              alert('Қате: ' + (err.error?.error || 'Белгісіз қате ❌'));
+            }
           } else {
             alert('Қате болды фаворитке қосқанда ❌');
           }
@@ -92,7 +96,7 @@ export class BookDetailComponent implements OnInit {
     }
   
     this.http.post('http://127.0.0.1:8000/api/cart/', {
-      book: this.book.id,
+      book_id: this.book.id,
       quantity: 1
     }).subscribe({
       next: () => alert('Кітап себетке қосылды! ✅'),

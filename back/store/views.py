@@ -170,17 +170,24 @@ def favorite_books(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = FavoriteSerializer(data=request.data)
-        if serializer.is_valid():
-            try:
-                serializer.save(user=request.user)
-                return Response(serializer.data, status=201)
-            except Exception as e:
-                return Response({'error': str(e)}, status=400)
-        return Response(serializer.errors, status=400)
+        book_id = request.data.get('book_id')
+        if not book_id:
+            return Response({'error': 'Book ID is required'}, status=400)
+
+        book = Book.objects.filter(id=book_id).first()
+        if not book:
+            return Response({'error': 'Book not found'}, status=404)
+
+        favorite, created = Favorite.objects.get_or_create(user=request.user, book=book)
+
+        if not created:
+            return Response({'error': 'Book is already in favorites'}, status=400)
+
+        serializer = FavoriteSerializer(favorite, context={'request': request})
+        return Response(serializer.data, status=201)
 
     elif request.method == 'DELETE':
-        book_id = request.data.get('book')
+        book_id = request.data.get('book_id')  # тут тоже book_id
         favorite = Favorite.objects.filter(user=request.user, book_id=book_id).first()
         if favorite:
             favorite.delete()

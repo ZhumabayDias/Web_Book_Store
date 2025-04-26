@@ -1,12 +1,25 @@
 <div class="all">
-    <h2>🔍 Іздеу нәтижесі</h2>
+  <h2>🔍 Іздеу нәтижесі</h2>
+
   
-    <div class="books-grid">
-      <div class="book-card" *ngFor="let book of books">
-        <img *ngIf="book.cover" [src]="book.cover" alt="{{ book.title }}" />
-        <h4>{{ book.title }}</h4>
-        <strong>{{ book.price }} ₸</strong>
-        <a [routerLink]="['/books', book.id]" class="details-link">Толығырақ</a>
-      </div>
+<div class="books-grid">
+  <a [routerLink]="['/books', book.id]" class="book-card-link" *ngFor="let book of books">
+    <div class="book-card">
+      <img *ngIf="book.cover" [src]="book.cover" alt="{{ book.title }}" />
+      <h4>{{ book.title }}</h4>
+      <strong>{{ book.price }} ₸</strong>
     </div>
-  </div>
+  </a>
+</div>
+
+
+</div>
+<app-footer></app-footer>
+
+
+
+<!-- 
+🔍 Іздеу нәтижесі
+
+  <a [routerLink]="['/books', book.id]" class="details-link">Толығырақ</a> -->
+

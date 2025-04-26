@@ -5,17 +5,17 @@
     </div>
 
     <div class="tabs">
-      <button class="tab" >Тіркеу</button>
-      <button class="tab" >Кіру</button>
+      <button class="tab" (click)="switchToRegister()" [class.active]="!flag">Тіркеу</button>
+      <button class="tab" (click)="switchToLogin()" [class.active]="flag">Кіру</button>
     </div>
-
-    <!-- Вход -->
-    <form (ngSubmit)="onLogin()" class="login-form">
+    
+    <!-- Login form -->
+    <form *ngIf="flag" (ngSubmit)="onLogin()" class="login-form">
       <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
       <input type="password" placeholder="Құпия сөз" [(ngModel)]="password" name="password" required>
       <button type="submit" class="login-button">Кіру</button>
       <a class="forgot-password" href="#">Құпия сөзді ұмыттыңыз ба?</a>
-
+    
       <div class="social-login">
         <p>Әлеуметтік желілер арқылы кіру</p>
         <div class="icons">
@@ -24,19 +24,13 @@
         </div>
       </div>
     </form>
-
-    <!-- Регистрация -->
-    <!-- <form *ngIf="!flag" (ngSubmit)="onRegister()" class="login-form">
+    
+    <!-- Register form -->
+    <form *ngIf="!flag" (ngSubmit)="onRegister()" class="login-form">
       <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
       <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
       <input type="password" placeholder="Құпия сөз" [(ngModel)]="password" name="password" required>
       <button type="submit" class="login-button">Тіркелу</button>
     </form>
-
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p> -->
-
-
-
     
-  </div>
-</div>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>

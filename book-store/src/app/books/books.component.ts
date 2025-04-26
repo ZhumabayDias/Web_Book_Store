@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  imports: [CommonModule,RouterLink,FormsModule],
+  imports: [CommonModule,RouterLink,FormsModule,FooterComponent],
   styleUrls: ['./books.component.css']
 })
 export class BooksComponent implements OnInit {

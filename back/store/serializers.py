@@ -15,7 +15,7 @@ class BookSerializer(serializers.ModelSerializer):
     
 
 
-class OrderItemSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.Serializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
@@ -92,17 +92,13 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     book = BookMiniSerializer(read_only=True)
+    book_id = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), write_only=True, source='book')
 
     class Meta:
         model = Cart
-        fields = ['id', 'book', 'quantity']
-        extra_kwargs = {
-            'book': {'required': True},
-        }
+        fields = ['id', 'book', 'book_id', 'quantity']
 
-
-
-
+        
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
